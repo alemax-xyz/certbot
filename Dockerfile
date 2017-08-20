@@ -97,7 +97,9 @@ RUN rm -rf \
         usr/share/perl5 \
         usr/share/pixmaps \
         usr/share/binfmts \
-        usr/sbin
+        usr/sbin && \
+    mkdir -p etc/ssl/certs && \
+    cat usr/share/ca-certificates/mozilla/*.crt > etc/ssl/certs/ca-certificates.crt
 
 FROM clover/base
 
