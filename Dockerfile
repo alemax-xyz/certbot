@@ -75,7 +75,6 @@ RUN rm -rf \
         etc/init \
         etc/init.d \
         etc/python2.7 \
-        etc/ssl \
         lib/systemd \
         usr/bin/cautious-launcher \
         usr/bin/compose \
@@ -98,7 +97,6 @@ RUN rm -rf \
         usr/share/pixmaps \
         usr/share/binfmts \
         usr/sbin && \
-    mkdir -p etc/ssl/certs && \
     cat usr/share/ca-certificates/mozilla/*.crt > etc/ssl/certs/ca-certificates.crt
 
 FROM clover/base
