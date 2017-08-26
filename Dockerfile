@@ -74,6 +74,8 @@ FROM clover/python-base:2.7
 WORKDIR /
 COPY --from=build /build/image /
 
+VOLUME ["/etc/letsencrypt"]
+
 CMD ["certbot", "renew"]
 
 EXPOSE 80
