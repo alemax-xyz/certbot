@@ -13,14 +13,10 @@ RUN add-apt-repository -y ppa:certbot/certbot && \
 RUN mkdir -p /build/image
 WORKDIR /build
 RUN apt-get download \
-        certbot \
-        python \
-        python2.7 \
-        python-minimal \
-        python2.7-minimal \
-        libpython-stdlib \
-        libpython2.7-stdlib \
-        libpython2.7-minimal \
+        libpipeline1 \
+        ca-certificates \
+        dialog \
+        tzdata \
         python-certbot \
         python-acme \
         python-dialog \
@@ -50,56 +46,25 @@ RUN apt-get download \
         python-zope.component \
         python-zope.event \
         python-zope.interface \
-        ca-certificates \
-        dialog \
-        tzdata \
-        mime-support \
-        libbz2-1.0 \
-        libdb5.3 \
-        libexpat1 \
-        libffi6 \
-        libncursesw5 \
-        libreadline6 \
-        libsqlite3-0 \
-        libssl1.0.0 \
-        libtinfo5 \
-        libpipeline1 \
-        zlib1g
+        certbot
 RUN for file in *.deb; do dpkg-deb -x ${file} image/; done
 
 WORKDIR /build/image
 RUN rm -rf \
         etc/ca-certificates \
         etc/cron* \
-        etc/default \
-        etc/init \
-        etc/init.d \
-        etc/python2.7 \
         lib/systemd \
-        usr/bin/cautious-launcher \
-        usr/bin/compose \
-        usr/bin/edit \
-        usr/bin/print \
-        usr/bin/run-mailcap \
-        usr/bin/see \
         usr/include \
-        usr/lib/mime \
-        usr/share/applications \
-        usr/share/apps \
-        usr/share/bug \
-        usr/share/debhelper \
         usr/share/doc \
         usr/share/doc-base \
         usr/share/lintian \
         usr/share/locale \
         usr/share/man \
         usr/share/perl5 \
-        usr/share/pixmaps \
-        usr/share/binfmts \
         usr/sbin && \
     cat usr/share/ca-certificates/mozilla/*.crt > etc/ssl/certs/ca-certificates.crt
 
-FROM clover/base
+FROM clover/python-base:2.7
 
 WORKDIR /
 COPY --from=build /build/image /
