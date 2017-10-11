@@ -1,27 +1,38 @@
-#
-# This is a multi-stage build.
-# Actual build is at the very end.
-#
+FROM clover/base AS base
+
+RUN groupadd \
+        --gid 50 \
+        --system \
+        certbot \
+ && useradd \
+        --home-dir /var/lib/letsencrypt \
+        --no-create-home \
+        --system \
+        --shell /bin/false \
+        --uid 50 \
+        --gid 50 \
+        certbot
 
 FROM library/ubuntu:xenial AS build
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV LANG C.UTF-8
-RUN apt-get update && \
-    apt-get install -y \
+ENV LANG=C.UTF-8
+
+RUN export DEBIAN_FRONTEND=noninteractive \
+ && apt-get update \
+ && apt-get install -y \
         python-software-properties \
         software-properties-common \
         apt-utils
-RUN add-apt-repository -y ppa:certbot/certbot && \
-    apt-get update
 
-RUN mkdir -p /build/image
+RUN export DEBIAN_FRONTEND=noninteractive \
+ && add-apt-repository -y ppa:certbot/certbot \
+ && apt-get update
+
+RUN mkdir -p /build /rootfs
 WORKDIR /build
 RUN apt-get download \
         libpipeline1 \
-        ca-certificates \
         dialog \
-        tzdata \
         python-certbot \
         python-acme \
         python-dialog \
@@ -52,11 +63,10 @@ RUN apt-get download \
         python-zope.event \
         python-zope.interface \
         certbot
-RUN for file in *.deb; do dpkg-deb -x ${file} image/; done
+RUN find *.deb | xargs -I % dpkg-deb -x % /rootfs
 
-WORKDIR /build/image
+WORKDIR /rootfs
 RUN rm -rf \
-        etc/ca-certificates \
         etc/cron* \
         lib/systemd \
         usr/include \
@@ -66,16 +76,27 @@ RUN rm -rf \
         usr/share/locale \
         usr/share/man \
         usr/share/perl5 \
-        usr/sbin && \
-    cat usr/share/ca-certificates/mozilla/*.crt > etc/ssl/certs/ca-certificates.crt
+ && mkdir -p \
+        www/.well-known/acme-challenge \
+        var/log/letsencrypt \
+        var/lib/letsencrypt
 
-FROM clover/python-base:2.7
+COPY --from=base /etc/group /etc/gshadow /etc/passwd /etc/shadow etc/
+COPY certbot etc/cron.d/
+COPY init.sh etc/
+COPY cli.ini etc/letsencrypt/
 
 WORKDIR /
-COPY --from=build /build/image /
+
+
+FROM clover/python:2.7
+
+ENV LANG=C.UTF-8
+
+COPY --from=build /rootfs /
 
 VOLUME ["/etc/letsencrypt"]
 
-CMD ["certbot", "renew"]
+CMD ["sh", "/etc/init.sh"]
 
-EXPOSE 80
+EXPOSE 80 443
