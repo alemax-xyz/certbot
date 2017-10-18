@@ -2,7 +2,9 @@
 
 test -z "$PUID" && PUID=50 || test "$PUID" -eq "$PUID" || exit 2
 PUSER=$(getent passwd $PUID | cut -d: -f1)
-test -n "$PUSER" || PUSER=$(getent passwd 50 | cut -d: -f1) && usermod --uid $PUID "$PUSER" || exit 2
+if [ -z "$PUSER" ]; then
+    PUSER=$(getent passwd 50 | cut -d: -f1) && usermod --uid $PUID "$PUSER" || exit 2
+fi
 
 test -z "$PGID" && PGID=$(id -g "$PUSER") || test "$PGID" -eq "$PGID" || exit 2
 PGROUP=$(getent group $PGID | cut -d: -f1)
