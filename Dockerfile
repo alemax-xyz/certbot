@@ -79,7 +79,8 @@ RUN rm -rf \
  && mkdir -p \
         www/.well-known/acme-challenge \
         var/log/letsencrypt \
-        var/lib/letsencrypt
+        var/lib/letsencrypt \
+ && touch www/.well-known/acme-challenge/.keep
 
 COPY --from=base /etc/group /etc/gshadow /etc/passwd /etc/shadow etc/
 COPY certbot etc/cron.d/

@@ -13,6 +13,6 @@ else
 	test $(id -g "$PUSER") -eq $PGID || usermod --gid $PGID "$PUSER" || exit 2
 fi
 
-chown $PUID:$PGID -R /www/.well-known/acme-challenge /etc/letsencrypt /var/log/letsencrypt /var/lib/letsencrypt || exit 2
+chown $PUID:$PGID /www/.well-known /www/.well-known/acme-challenge /etc/letsencrypt /var/log/letsencrypt /var/lib/letsencrypt || exit 2
 
 cron -f
