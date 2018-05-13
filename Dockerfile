@@ -31,51 +31,43 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 RUN mkdir -p /build /rootfs
 WORKDIR /build
 RUN apt-get download \
-        libpipeline1 \
-        dialog \
-        python-certbot \
-        python-acme \
-        python-dialog \
-        python-dnspython \
-        python-ndg-httpsclient \
-        python-requests \
-        python-configargparse \
-        python-configobj \
-        python-cryptography \
-        python-enum34 \
-        python-idna \
-        python-ipaddress \
-        python-pyasn1 \
-        python-cffi-backend \
-        python-chardet \
-        python-pkg-resources \
-        python-mock \
-        python-funcsigs \
-        python-pbr \
-        python-openssl \
-        python-parsedatetime \
-        python-rfc3339 \
-        python-setuptools \
-        python-six \
-        python-tz \
-        python-urllib3 \
-        python-zope.component \
-        python-zope.event \
-        python-zope.interface \
+        python3-certbot \
+        python3-acme \
+        python3-requests \
+        python3-certifi \
+        python3-chardet \
+        python3-idna \
+        python3-urllib3 \
+        python3-configargparse \
+        python3-configobj \
+        python3-cryptography \
+        python3-asn1crypto \
+        python3-josepy \
+        python3-pkg-resources \
+        python3-mock \
+        python3-pbr \
+        python3-openssl \
+        python3-parsedatetime \
+        python3-future \
+        python3-rfc3339 \
+        python3-six \
+        python3-tz \
+        python3-zope.component \
+        python3-zope.hookable \
+        python3-zope.event \
+        python3-zope.interface \
+        python3-cffi-backend \
         certbot
 RUN find *.deb | xargs -I % dpkg-deb -x % /rootfs
 
 WORKDIR /rootfs
 RUN rm -rf \
         etc/cron* \
+        etc/logrotate.d \
         lib/systemd \
-        usr/include \
         usr/share/doc \
-        usr/share/doc-base \
         usr/share/lintian \
-        usr/share/locale \
         usr/share/man \
-        usr/share/perl5 \
  && mkdir -p \
         www/.well-known/acme-challenge \
         var/log/letsencrypt \
@@ -90,7 +82,7 @@ COPY cli.ini etc/letsencrypt/
 WORKDIR /
 
 
-FROM clover/python:2.7
+FROM clover/python:3.5
 
 ENV LANG=C.UTF-8
 
