@@ -13,14 +13,13 @@ RUN groupadd \
         --gid 50 \
         certbot
 
-FROM library/ubuntu:xenial AS build
+FROM library/ubuntu:bionic AS build
 
 ENV LANG=C.UTF-8
 
 RUN export DEBIAN_FRONTEND=noninteractive \
  && apt-get update \
  && apt-get install -y \
-        python-software-properties \
         software-properties-common \
         apt-utils
 
@@ -82,7 +81,7 @@ COPY cli.ini etc/letsencrypt/
 WORKDIR /
 
 
-FROM clover/python:3.5
+FROM clover/python:3.6
 
 ENV LANG=C.UTF-8
 
