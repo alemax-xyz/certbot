@@ -47,6 +47,7 @@ RUN apt-get download \
         python3-pbr \
         python3-openssl \
         python3-parsedatetime \
+        python3-requests-toolbelt \
         python3-future \
         python3-rfc3339 \
         python3-six \
