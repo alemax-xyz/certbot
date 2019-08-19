@@ -69,14 +69,14 @@ RUN rm -rf \
         usr/share/lintian \
         usr/share/man \
  && mkdir -p \
-        www/.well-known/acme-challenge \
+        var/www/.well-known/acme-challenge \
         var/log/letsencrypt \
         var/lib/letsencrypt \
- && touch www/.well-known/acme-challenge/.keep
+ && touch var/www/.well-known/acme-challenge/.keep
 
 COPY --from=base /etc/group /etc/gshadow /etc/passwd /etc/shadow etc/
 COPY certbot etc/cron.d/
-COPY init.sh etc/
+COPY init/ etc/init/
 COPY cli.ini etc/letsencrypt/
 
 WORKDIR /
@@ -89,7 +89,5 @@ ENV LANG=C.UTF-8
 COPY --from=build /rootfs /
 
 VOLUME ["/etc/letsencrypt"]
-
-CMD ["sh", "/etc/init.sh"]
 
 EXPOSE 80 443

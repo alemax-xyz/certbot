@@ -9,7 +9,7 @@ By default, the container will only renew certificates every day in a _webroot_ 
 | Location | Description |
 |---|---|
 | `/etc/letsencrypt` | certificates, private keys and _certbot_ configuration files |
-| `/www/.well-known/acme-challenge` | (not exported) acme challenges in _webroot_ mode |
+| `/var/www/.well-known/acme-challenge` | (not exported) acme challenges in _webroot_ mode |
 | `/var/log/letsencrypt` | (not exported) _certbot_ log files |
 | `/var/lib/letsencrypt` | (not exported) _certbot_ working directory |
 
