@@ -1,3 +1,3 @@
 #!/bin/sh
 
-cron -f
+exec cron -f
